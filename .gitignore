@@ -1,2 +1,6 @@
 .idea/
 go.sum
+config.toml
+*.db
+*.sqlite3
+*.pem

@@ -1,0 +1,7 @@
+[HTTP]
+ListenAddress = "127.0.0.1:8080"
+TLSCertPath = "/var/lib/q-scheduler/cert.pem"
+TLSKeyPath = "/var/lib/q-scheduler/key.pem"
+
+[Database]
+Path = "/var/lib/q-scheduler/database.sqlite3"

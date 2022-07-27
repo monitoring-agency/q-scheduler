@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/myOmikron/q-scheduler/models"
+	"github.com/myOmikron/q-scheduler/modules/scheduler"
 	"net/http"
 	"os"
 	"os/signal"
@@ -15,24 +15,40 @@ import (
 	log2 "github.com/labstack/gommon/log"
 	"github.com/myOmikron/echotools/color"
 	"github.com/myOmikron/echotools/middleware"
+
+	"github.com/myOmikron/q-scheduler/models"
 )
 
 var ascii = `
-▄▄▄▄▄▄▄         ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄   ▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄  ▄▄   ▄▄ ▄▄▄     ▄▄▄▄▄▄▄ ▄▄▄▄▄▄
-█       █      █       █       █  █ █  █       █      ██  █ █  █   █   █       █   ▄  █
-█   ▄   █      █  ▄▄▄▄▄█       █  █▄█  █    ▄▄▄█  ▄    █  █ █  █   █   █    ▄▄▄█  █ █ █
-█  █ █  █      █  █▄▄▄▄█     ▄▄█       █   █▄▄▄█ █ █   █  █▄█  █   █   █   █▄▄▄█  █▄▄█▄▄
-█  █▄█  █      █▄▄▄▄▄  █    █  █   ▄   █    ▄▄▄█ █▄█   █       █   █▄▄▄█    ▄▄▄█    ▄▄  █
-█      █       ▄▄▄▄▄█  █    █▄▄█  █ █  █   █▄▄▄█       █       █       █   █▄▄▄█   █  █ █
-█▄▄▄▄██▄█      █▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄█ █▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄██▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄█  █▄█
+  ___    ___      _             _        _
+ / _ \  / __| __ | |_   ___  __| | _  _ | | ___  _ _
+| (_) | \__ \/ _||   \ / -_)/ _\ || || || |/ -_)| '_|
+ \__\_\ |___/\__||_||_|\___|\__/_| \_._||_|\___||_|
 `
 
 func StartServer(configPath string) {
 	// Config
 	config := models.GetConfig(configPath)
 
+	// Check for required files
+	if _, err := os.Stat(config.HTTP.TLSKeyPath); os.IsNotExist(err) {
+		color.Println(color.RED, "[File Error]")
+		fmt.Printf("Private key not found: %s\n", config.HTTP.TLSKeyPath)
+		os.Exit(1)
+	}
+
+	if _, err := os.Stat(config.HTTP.TLSCertPath); os.IsNotExist(err) {
+		color.Println(color.RED, "[File Error]")
+		fmt.Printf("Certificate not found: %s\n", config.HTTP.TLSCertPath)
+		os.Exit(1)
+	}
+
 	// Initialize database
-	_ = initDatabase(config)
+	db := initDatabase(config)
+
+	// Initialize scheduler
+	s := scheduler.New(db)
+	go s.Start()
 
 	// Initialize web server
 	e := echo.New()
@@ -42,6 +58,9 @@ func StartServer(configPath string) {
 
 	// Set middleware
 	e.Use(middleware.Panic())
+
+	// Define routes
+	defineRoutes(e, db, config, s)
 
 	// Display art & start server
 	color.Println(color.RED, ascii)
@@ -68,6 +87,7 @@ func StartServer(configPath string) {
 			color.Println(color.PURPLE, "Server is restarting")
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			e.Shutdown(ctx)
+			s.Quit()
 			cancel()
 			restart = true
 			break
@@ -75,10 +95,12 @@ func StartServer(configPath string) {
 			color.Println(color.PURPLE, "Server is stopping gracefully")
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			e.Shutdown(ctx)
+			s.Quit()
 			cancel()
 			break
 		} else if sig == syscall.SIGTERM { // Shutdown immediately
 			e.Close()
+			s.Quit()
 			color.Println(color.PURPLE, "Server was shut down")
 			break
 		} else {

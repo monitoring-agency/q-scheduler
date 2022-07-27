@@ -4,3 +4,5 @@ config.toml
 *.db
 *.sqlite3
 *.pem
+*.csr
+

@@ -1,5 +1,7 @@
 [HTTP]
-ListenAddress = "127.0.0.1:8080"
+DNS = "poller.q"
+CoreDNS = "core.q"
+ListenAddress = "0.0.0.0:8448"
 TLSCertPath = "/var/lib/q-scheduler/cert.pem"
 TLSKeyPath = "/var/lib/q-scheduler/key.pem"
 

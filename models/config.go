@@ -3,15 +3,18 @@ package models
 import (
 	"errors"
 	"fmt"
-	"github.com/myOmikron/echotools/color"
-	"github.com/pelletier/go-toml"
 	"io/fs"
 	"io/ioutil"
 	"os"
+
+	"github.com/myOmikron/echotools/color"
+	"github.com/pelletier/go-toml"
 )
 
 type HTTP struct {
 	ListenAddress string
+	DNS           string
+	CoreDNS       string
 	TLSKeyPath    string
 	TLSCertPath   string
 }
@@ -32,6 +35,14 @@ func (c *Config) checkConfig() error {
 
 	if c.Database.Path == "" {
 		return errors.New("parameter Path in section Database must not be empty")
+	}
+
+	if c.HTTP.DNS == "" {
+		return errors.New("parameter DNS in section HTTP must not be empty")
+	}
+
+	if c.HTTP.CoreDNS == "" {
+		return errors.New("parameter CoreDNS in section HTTP must not be empty")
 	}
 
 	return nil

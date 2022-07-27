@@ -4,6 +4,12 @@ import (
 	"gorm.io/gorm"
 )
 
+type Scheduler interface {
+	Start()
+	Quit()
+	Reload()
+}
+
 type scheduler struct {
 	quit   chan bool
 	reload chan bool

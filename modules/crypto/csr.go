@@ -8,10 +8,11 @@ import (
 	"crypto/x509/pkix"
 	"encoding/pem"
 	"fmt"
-	"github.com/myOmikron/q-scheduler/models"
 	"os"
 
 	"github.com/myOmikron/echotools/color"
+
+	"github.com/myOmikron/q-scheduler/models"
 )
 
 func GenerateCSR(privKey *rsa.PrivateKey, config *models.Config) bytes.Buffer {

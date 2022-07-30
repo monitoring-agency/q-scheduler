@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/myOmikron/q-scheduler/modules/scheduler"
 	"net/http"
 	"os"
 	"os/signal"
@@ -17,6 +16,7 @@ import (
 	"github.com/myOmikron/echotools/middleware"
 
 	"github.com/myOmikron/q-scheduler/models"
+	"github.com/myOmikron/q-scheduler/modules/scheduler"
 )
 
 var ascii = `
@@ -47,7 +47,7 @@ func StartServer(configPath string) {
 	db := initDatabase(config)
 
 	// Initialize scheduler
-	s := scheduler.New(db)
+	s := scheduler.New(db, config)
 	go s.Start()
 
 	// Initialize web server

@@ -7,3 +7,6 @@ TLSKeyPath = "/var/lib/q-scheduler/key.pem"
 
 [Database]
 Path = "/var/lib/q-scheduler/database.sqlite3"
+
+[Scheduler]
+Worker = 50

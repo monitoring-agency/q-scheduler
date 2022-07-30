@@ -16,6 +16,10 @@ func initDatabase(config *models.Config) *gorm.DB {
 	db := database.Initialize(
 		driver,
 		models.About{},
+		models.Check{},
+		models.TimePeriod{},
+		models.SchedulingDay{},
+		models.SchedulingPeriod{},
 	)
 
 	about := models.About{}

@@ -1,6 +1,8 @@
 package server
 
 import (
+	"time"
+
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 
@@ -11,9 +13,10 @@ import (
 
 func defineRoutes(e *echo.Echo, db *gorm.DB, config *models.Config, s scheduler.Scheduler) {
 	w := handler.Wrapper{
-		Config:    config,
-		DB:        db,
-		Scheduler: s,
+		Config:      config,
+		DB:          db,
+		Scheduler:   s,
+		ServerStart: time.Now().UTC(),
 	}
 
 	e.GET("/api/v1/about", w.About)

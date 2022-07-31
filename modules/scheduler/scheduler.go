@@ -3,6 +3,7 @@ package scheduler
 import (
 	"github.com/myOmikron/echotools/worker"
 	"gorm.io/gorm"
+	"time"
 
 	"github.com/monitoring-agency/q-scheduler/models"
 )
@@ -11,20 +12,23 @@ type Scheduler interface {
 	Start()
 	Quit()
 	Reload()
+	RunningSince() time.Time
 }
 
 type scheduler struct {
-	quit   chan bool
-	reload chan bool
-	db     *gorm.DB
-	pool   worker.Pool
+	quit         chan bool
+	reload       chan bool
+	db           *gorm.DB
+	pool         worker.Pool
+	runningSince time.Time
 }
 
 func New(db *gorm.DB, config *models.Config) *scheduler {
 	return &scheduler{
-		quit:   make(chan bool),
-		reload: make(chan bool),
-		db:     db,
+		quit:         make(chan bool),
+		reload:       make(chan bool),
+		db:           db,
+		runningSince: time.Now().UTC(),
 		pool: worker.NewPool(&worker.PoolConfig{
 			NumWorker: int(config.Scheduler.Worker),
 			QueueSize: int(config.Scheduler.Worker * 10),
@@ -45,6 +49,8 @@ func (s *scheduler) loadChecks() []worker.Task {
 }
 
 func (s *scheduler) Start() {
+	s.runningSince = time.Now().UTC()
+
 	go s.pool.Start()
 	s.pool.AddTasks(s.loadChecks())
 
@@ -53,6 +59,7 @@ Loop:
 		select {
 		case <-s.reload:
 			s.pool.Stop()
+			s.runningSince = time.Now().UTC()
 			go s.pool.Start()
 			s.pool.AddTasks(s.loadChecks())
 		case <-s.quit:
@@ -68,4 +75,8 @@ func (s *scheduler) Quit() {
 
 func (s *scheduler) Reload() {
 	s.reload <- true
+}
+
+func (s *scheduler) RunningSince() time.Time {
+	return s.runningSince
 }

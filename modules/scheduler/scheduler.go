@@ -67,7 +67,6 @@ Loop:
 		case <-s.quit:
 			s.pool.Stop()
 			break Loop
-		default:
 		}
 	}
 }

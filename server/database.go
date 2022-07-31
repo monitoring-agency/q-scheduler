@@ -6,7 +6,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
-	"github.com/myOmikron/q-scheduler/models"
+	"github.com/monitoring-agency/q-scheduler/models"
 )
 
 var VERSION = "0.1.0"

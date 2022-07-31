@@ -15,8 +15,8 @@ import (
 	"github.com/myOmikron/echotools/color"
 	"github.com/myOmikron/echotools/middleware"
 
-	"github.com/myOmikron/q-scheduler/models"
-	"github.com/myOmikron/q-scheduler/modules/scheduler"
+	"github.com/monitoring-agency/q-scheduler/models"
+	"github.com/monitoring-agency/q-scheduler/modules/scheduler"
 )
 
 var ascii = `

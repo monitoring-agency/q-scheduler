@@ -3,8 +3,8 @@ package handler
 import (
 	"gorm.io/gorm"
 
-	"github.com/myOmikron/q-scheduler/models"
-	"github.com/myOmikron/q-scheduler/modules/scheduler"
+	"github.com/monitoring-agency/q-scheduler/models"
+	"github.com/monitoring-agency/q-scheduler/modules/scheduler"
 )
 
 type Wrapper struct {

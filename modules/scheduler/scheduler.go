@@ -4,7 +4,7 @@ import (
 	"github.com/myOmikron/echotools/worker"
 	"gorm.io/gorm"
 
-	"github.com/myOmikron/q-scheduler/models"
+	"github.com/monitoring-agency/q-scheduler/models"
 )
 
 type Scheduler interface {

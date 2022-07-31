@@ -9,9 +9,9 @@ import (
 	"github.com/hellflame/argparse"
 	"github.com/myOmikron/echotools/color"
 
-	"github.com/myOmikron/q-scheduler/models"
-	"github.com/myOmikron/q-scheduler/modules/crypto"
-	"github.com/myOmikron/q-scheduler/server"
+	"github.com/monitoring-agency/q-scheduler/models"
+	"github.com/monitoring-agency/q-scheduler/modules/crypto"
+	"github.com/monitoring-agency/q-scheduler/server"
 )
 
 func main() {

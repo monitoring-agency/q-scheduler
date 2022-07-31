@@ -1,8 +1,9 @@
 package models
 
 import (
-	"github.com/myOmikron/echotools/utilitymodels"
 	"time"
+
+	"github.com/myOmikron/echotools/utilitymodels"
 )
 
 type About struct {

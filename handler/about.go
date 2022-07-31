@@ -3,7 +3,7 @@ package handler
 import (
 	"github.com/labstack/echo/v4"
 
-	"github.com/myOmikron/q-scheduler/models"
+	"github.com/monitoring-agency/q-scheduler/models"
 )
 
 type AboutResponse struct {

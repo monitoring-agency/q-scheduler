@@ -12,7 +12,7 @@ import (
 
 	"github.com/myOmikron/echotools/color"
 
-	"github.com/myOmikron/q-scheduler/models"
+	"github.com/monitoring-agency/q-scheduler/models"
 )
 
 func GenerateCSR(privKey *rsa.PrivateKey, config *models.Config) bytes.Buffer {

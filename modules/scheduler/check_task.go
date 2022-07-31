@@ -8,7 +8,7 @@ import (
 
 	"github.com/myOmikron/echotools/worker"
 
-	"github.com/myOmikron/q-scheduler/models"
+	"github.com/monitoring-agency/q-scheduler/models"
 )
 
 func runCheck(cmdline string) (*models.Result, error) {

@@ -11,7 +11,7 @@ import (
 
 	"github.com/myOmikron/echotools/color"
 
-	"github.com/myOmikron/q-scheduler/models"
+	"github.com/monitoring-agency/q-scheduler/models"
 )
 
 func GeneratePrivateKey(config *models.Config) *rsa.PrivateKey {

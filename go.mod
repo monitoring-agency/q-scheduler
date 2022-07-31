@@ -1,4 +1,4 @@
-module github.com/myOmikron/q-scheduler
+module github.com/monitoring-agency/q-scheduler
 
 go 1.18
 

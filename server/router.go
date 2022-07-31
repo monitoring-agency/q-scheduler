@@ -20,4 +20,5 @@ func defineRoutes(e *echo.Echo, db *gorm.DB, config *models.Config, s scheduler.
 	}
 
 	e.GET("/api/v1/about", w.About)
+	e.POST("/api/v1/reload", w.Reload)
 }

@@ -1,6 +1,7 @@
 package scheduler
 
 import (
+	"github.com/myOmikron/echotools/color"
 	"github.com/myOmikron/echotools/worker"
 	"gorm.io/gorm"
 	"time"
@@ -62,9 +63,11 @@ Loop:
 			s.runningSince = time.Now().UTC()
 			go s.pool.Start()
 			s.pool.AddTasks(s.loadChecks())
+			color.Println(color.PURPLE, "Reloaded scheduler")
 		case <-s.quit:
 			s.pool.Stop()
 			break Loop
+		default:
 		}
 	}
 }

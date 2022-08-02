@@ -11,12 +11,21 @@ import (
 	"github.com/monitoring-agency/q-scheduler/modules/scheduler"
 )
 
-func defineRoutes(e *echo.Echo, db *gorm.DB, config *models.Config, s scheduler.Scheduler) {
+func defineRoutes(
+	e *echo.Echo,
+	db *gorm.DB,
+	config *models.Config,
+	s scheduler.Scheduler,
+	configuration *models.Configuration,
+	configurationReloadFunc func(),
+) {
 	w := handler.Wrapper{
-		Config:      config,
-		DB:          db,
-		Scheduler:   s,
-		ServerStart: time.Now().UTC(),
+		Config:                  config,
+		DB:                      db,
+		Scheduler:               s,
+		ServerStart:             time.Now().UTC(),
+		Configuration:           configuration,
+		ConfigurationReloadFunc: configurationReloadFunc,
 	}
 
 	e.GET("/api/v1/about", w.About)

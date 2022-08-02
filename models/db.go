@@ -11,6 +11,12 @@ type About struct {
 	Version string
 }
 
+type Configuration struct {
+	utilitymodels.CommonID
+	WorkerPoolCount int
+	ProcessTimeout  int
+}
+
 type TimePeriod struct {
 	utilitymodels.CommonID
 	Start int

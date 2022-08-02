@@ -23,14 +23,9 @@ type Database struct {
 	Path string
 }
 
-type Scheduler struct {
-	Worker uint
-}
-
 type Config struct {
-	HTTP      HTTP
-	Database  Database
-	Scheduler Scheduler
+	HTTP     HTTP
+	Database Database
 }
 
 func (c *Config) checkConfig() error {

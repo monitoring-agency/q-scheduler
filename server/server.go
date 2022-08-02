@@ -46,8 +46,20 @@ func StartServer(configPath string) {
 	// Initialize database
 	db := initDatabase(config)
 
+	configuration := models.Configuration{}
+	var count int64
+	db.Find(&configuration).Count(&count)
+	if count == 0 {
+		configuration.ProcessTimeout = 120
+		configuration.WorkerPoolCount = 50
+		db.Save(&configuration)
+	}
+	configurationReload := func() {
+		db.Take(&configuration)
+	}
+
 	// Initialize scheduler
-	s := scheduler.New(db, config)
+	s := scheduler.New(db, &configuration)
 	go s.Start()
 
 	// Initialize web server
@@ -60,7 +72,7 @@ func StartServer(configPath string) {
 	e.Use(middleware.Panic())
 
 	// Define routes
-	defineRoutes(e, db, config, s)
+	defineRoutes(e, db, config, s, &configuration, configurationReload)
 
 	// Display art & start server
 	color.Println(color.RED, ascii)

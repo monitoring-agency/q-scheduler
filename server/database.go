@@ -1,12 +1,11 @@
 package server
 
 import (
+	"github.com/monitoring-agency/q-scheduler/models"
 	"github.com/myOmikron/echotools/color"
 	"github.com/myOmikron/echotools/database"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-
-	"github.com/monitoring-agency/q-scheduler/models"
 )
 
 var VERSION = "0.1.0"
@@ -17,9 +16,11 @@ func initDatabase(config *models.Config) *gorm.DB {
 		driver,
 		models.About{},
 		models.Check{},
+		models.Result{},
 		models.TimePeriod{},
 		models.SchedulingDay{},
 		models.SchedulingPeriod{},
+		models.Configuration{},
 	)
 
 	about := models.About{}

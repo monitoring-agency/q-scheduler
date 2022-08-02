@@ -1,10 +1,11 @@
 package scheduler
 
 import (
+	"time"
+
 	"github.com/myOmikron/echotools/color"
 	"github.com/myOmikron/echotools/worker"
 	"gorm.io/gorm"
-	"time"
 
 	"github.com/monitoring-agency/q-scheduler/models"
 )
@@ -17,22 +18,24 @@ type Scheduler interface {
 }
 
 type scheduler struct {
-	quit         chan bool
-	reload       chan bool
-	db           *gorm.DB
-	pool         worker.Pool
-	runningSince time.Time
+	quit          chan bool
+	reload        chan bool
+	db            *gorm.DB
+	pool          worker.Pool
+	runningSince  time.Time
+	configuration *models.Configuration
 }
 
-func New(db *gorm.DB, config *models.Config) *scheduler {
+func New(db *gorm.DB, configuration *models.Configuration) *scheduler {
 	return &scheduler{
-		quit:         make(chan bool),
-		reload:       make(chan bool),
-		db:           db,
-		runningSince: time.Now().UTC(),
+		quit:          make(chan bool),
+		reload:        make(chan bool),
+		db:            db,
+		runningSince:  time.Now().UTC(),
+		configuration: configuration,
 		pool: worker.NewPool(&worker.PoolConfig{
-			NumWorker: int(config.Scheduler.Worker),
-			QueueSize: int(config.Scheduler.Worker * 10),
+			NumWorker: configuration.WorkerPoolCount,
+			QueueSize: configuration.WorkerPoolCount * 10,
 		}),
 	}
 }

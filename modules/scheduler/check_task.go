@@ -95,8 +95,10 @@ func createCheckTask(check models.Check, s *scheduler) worker.Task {
 			}
 		}
 
-		time.Sleep(time.Duration(check.SchedulingInterval) * time.Second)
-		s.pool.AddTask(createCheckTask(check, s))
+		go func() {
+			time.Sleep(time.Duration(check.SchedulingInterval) * time.Second)
+			s.pool.AddTask(createCheckTask(check, s))
+		}()
 		return nil
 	})
 }

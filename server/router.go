@@ -30,4 +30,5 @@ func defineRoutes(
 
 	e.GET("/api/v1/about", w.About)
 	e.POST("/api/v1/reload", w.Reload)
+	e.POST("/api/v1/updateConfiguration", w.UpdateConfiguration)
 }

@@ -64,6 +64,13 @@ Loop:
 		case <-s.reload:
 			s.pool.Stop()
 			s.runningSince = time.Now().UTC()
+
+			// Create new pool as configuration might have changed in between
+			s.pool = worker.NewPool(&worker.PoolConfig{
+				NumWorker: s.configuration.WorkerPoolCount,
+				QueueSize: s.configuration.WorkerPoolCount * 10,
+			})
+
 			go s.pool.Start()
 			s.pool.AddTasks(s.loadChecks())
 			color.Println(color.PURPLE, "Reloaded scheduler")
